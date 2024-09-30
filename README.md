@@ -29,6 +29,7 @@ const count = ref(0);
 // react
 // <number>는 generic을 사용해서 타입을 정의해주는 문법입니다.
 const [count, setCount] = useState<number>(0);
+
 // 객체의 경우 타입을 정의해주는 문법입니다.
 const [objectCount, setObjectCount] = useState<{ count: number }>({
   count: 0,
