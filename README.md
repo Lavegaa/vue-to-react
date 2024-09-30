@@ -1,4 +1,5 @@
 # state
+
 Client에서는 화면에 보여주는 많은 정보들을 관리해야합니다.
 이때 react에서는 state라는 개념을 사용해서 화면에 보여주는 정보들을 관리합니다.
 
@@ -8,9 +9,12 @@ react에서는 useState라는 hook을 통해 state를 관리합니다.
 hook이란 react에서 상태관리, 생명주기 등을 관리할 수 있게 만든 함수입니다. 보통 use로 시작합니다.
 
 ### useState
+
 useState는 기본적으로 getter, setter를 제공합니다.
 이름은 정해진게 없으나, 보통 [stateName, setStateName]으로 사용합니다.
 useState는 인자로 초기값을 받습니다.
+
+또한 typescript에서는 [generic](https://www.typescriptlang.org/docs/handbook/2/generics.html)을 사용해서 타입을 정의할 수 있습니다.
 
 ```javascript
 // vue
@@ -21,15 +25,28 @@ const state = reactive({
 const count = ref(0);
 ```
 
-```javascript
+```
 // react
-const [count, setCount] = useState(0);
-const [objectCount, setObjectCount] = useState({
+// <number>는 generic을 사용해서 타입을 정의해주는 문법입니다.
+const [count, setCount] = useState<number>(0);
+// 객체의 경우 타입을 정의해주는 문법입니다.
+const [objectCount, setObjectCount] = useState<{ count: number }>({
+  count: 0,
+});
+
+or
+
+interface ICount {
+  count: number;
+}
+
+const [objectCount, setObjectCount] = useState<ICount>({
   count: 0,
 });
 ```
 
 ### vue와 차이점
+
 vue에서는 객체를 관리할 때 reactive를, 원시값을 관리할 때 ref를 사용합니다.
 그러나 react에서는 둘 다 useState를 사용해서 관리합니다.
 
@@ -58,5 +75,3 @@ setCount({
   count: 1,
 });
 ```
-
-
