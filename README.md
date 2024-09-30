@@ -33,7 +33,8 @@ interface TodoItemProps {
 }
 
 // props를 받아오는 방법 -> 파라미터로 받아오기
-const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
+// props에 대한 interface를 만들어서 파라미터로 받아올때 정의해줍니다.
+const TodoItem = ({ todo }: TodoItemProps) => {
   return <h2>{todo || "No props passed yet"}</h2>;
 };
 
