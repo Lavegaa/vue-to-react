@@ -1,74 +1,94 @@
-# vue to react
+# lifeCycle
 
-nextjs를 사용해서 vue로 만든 프로젝트를 react로 만들어보는 실습을 진행합니다.
-[react에서 recommend하는 setup방법](https://react.dev/learn/start-a-new-react-project#production-grade-react-frameworks)이 nextjs입니다.
-기본적으로 SSR을 지원하는 프레임워크이나, SSR의 기능 이외에도 폴더를 기반으로 하는 라우팅을 지원해줘서 react에서 주로 사용하는 [router라이브러리](https://reactrouter.com/en/main)를 사용하지 않는다는 장점도 있습니다.
+react에서도 vue처럼 라이프사이클을 사용할 수 있습니다.
 
-setup을 위해 [nextjs에서 지원하는 cli명령어](https://reactrouter.com/en/main)를 사용합니다.
-
-```bash
-npx create-next-app@latest
-
-What is your project named? my-app
-Would you like to use TypeScript? No / Yes
-Would you like to use ESLint? No / Yes
-Would you like to use Tailwind CSS? No / Yes
-Would you like your code inside a `src/` directory? No / Yes
-Would you like to use App Router? (recommended) No / Yes
-Would you like to use Turbopack for `next dev`?  No / Yes
-Would you like to customize the import alias (`@/*` by default)? No / Yes
-What import alias would you like configured? @/*
-```
-
-결과적으로 main에 있는 프로젝트가 만들어집니다.
-
-# 참고사항
-
-[yarn](https://yarnpkg.com/)을 설치하시면 좀 더 편하게 node의 패키지들을 사용할 수 있습니다.
-yarn은 병렬설치, 캐싱 등등 npm을 대안해서 만들었습니다.
+useEffect라는 hook을 사용해서 라이프사이클을 사용할 수 있습니다.
 
 ```
-npm install yarn --global
+// vue
+<template>
+  <div>{{ count }}</div>
+</template>
 
-yarn --version
-1.22.22
+<script setup>
+  import { ref, onMounted, onUnmounted, watch } from "vue";
+  const count = ref(0);
+
+  // 컴포넌트가 마운트될 때 실행됩니다.
+  onMounted(() => {
+    console.log("onMounted");
+  });
+
+  // 컴포넌트가 언마운트될 때 실행됩니다.
+  onUnmounted(() => {
+    console.log("onUnmounted");
+  });
+
+  // count가 업데이트될 때 실행됩니다.
+  watch(count, (newValue, oldValue) => {
+    console.log("count updated!", newValue);
+  });
+</script>
+
 ```
 
-# 기본 제공 README.md
+```
+// react
+import { useEffect } from "react";
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+// 컴포넌트가 마운트될 때 실행됩니다.
+useEffect(() => {
+  console.log("onMounted");
+}, []);
 
-## Getting Started
+// 컴포넌트가 언마운트될 때 실행됩니다.
+useEffect(() => {
+  return () => {
+    console.log("onUnmounted");
+  };
+}, []);
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+// 컴포넌트가 업데이트될 때 실행됩니다.
+useEffect(() => {
+  console.log("count updated!", count);
+}, [count]);
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# api 호출
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+nodejs에서 가장 유명한 api 호출 라이브러리는 axios입니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+yarn add axios
+```
 
-## Learn More
+기존에 사용하던 api호출 패턴을 그대로 사용해서 호출합니다.
 
-To learn more about Next.js, take a look at the following resources:
+```javascript
+const login = async () => {
+  const response = await axios.post("http://localhost:3000/login", {
+    username: "test",
+    password: "test",
+  });
+  console.log(response);
+};
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+또한 프록시를 사용하기 위해 다음과 같은 작업을 합니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+// next.config.mjs 파일 수정
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://project-vue.tobecon.co.kr/:path*",
+      },
+    ];
+  },
+};
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+export default nextConfig;
+```
