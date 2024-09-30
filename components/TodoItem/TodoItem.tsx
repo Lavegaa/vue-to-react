@@ -1,22 +1,21 @@
 "use client";
 
-import { useState } from "react";
+interface ITodoItem {
+  todo: ITodo;
+  handleClick: (id: number) => void;
+}
 
-const TodoItem = () => {
-  const [todo, setTodo] = useState({
-    id: 0,
-    title: "react 공부",
-    done: false,
-  });
+export interface ITodo {
+  id: number;
+  title: string;
+  isDone: boolean;
+}
 
-  const handleClick = () => {
-    setTodo({ ...todo, done: !todo.done });
-  };
-
+const TodoItem = ({ todo, handleClick }: ITodoItem) => {
   return (
     <div>
-      <h1 onClick={handleClick}>{todo.title}</h1>
-      <h2>{todo.done ? "완료" : "미완료"}</h2>
+      <h1 onClick={() => handleClick(todo.id)}>{todo.title}</h1>
+      <h2>{todo.isDone ? "완료" : "미완료"}</h2>
     </div>
   );
 };
