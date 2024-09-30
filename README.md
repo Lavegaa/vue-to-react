@@ -1,74 +1,62 @@
-# vue to react
+# state
+Client에서는 화면에 보여주는 많은 정보들을 관리해야합니다.
+이때 react에서는 state라는 개념을 사용해서 화면에 보여주는 정보들을 관리합니다.
 
-nextjs를 사용해서 vue로 만든 프로젝트를 react로 만들어보는 실습을 진행합니다.
-[react에서 recommend하는 setup방법](https://react.dev/learn/start-a-new-react-project#production-grade-react-frameworks)이 nextjs입니다.
-기본적으로 SSR을 지원하는 프레임워크이나, SSR의 기능 이외에도 폴더를 기반으로 하는 라우팅을 지원해줘서 react에서 주로 사용하는 [router라이브러리](https://reactrouter.com/en/main)를 사용하지 않는다는 장점도 있습니다.
+vue에서는 ref, reactive를 통해 관리하는 방식과 유사합니다.
 
-setup을 위해 [nextjs에서 지원하는 cli명령어](https://reactrouter.com/en/main)를 사용합니다.
+react에서는 useState라는 hook을 통해 state를 관리합니다.
+hook이란 react에서 상태관리, 생명주기 등을 관리할 수 있게 만든 함수입니다. 보통 use로 시작합니다.
 
-```bash
-npx create-next-app@latest
+### useState
+useState는 기본적으로 getter, setter를 제공합니다.
+이름은 정해진게 없으나, 보통 [stateName, setStateName]으로 사용합니다.
+useState는 인자로 초기값을 받습니다.
 
-What is your project named? my-app
-Would you like to use TypeScript? No / Yes
-Would you like to use ESLint? No / Yes
-Would you like to use Tailwind CSS? No / Yes
-Would you like your code inside a `src/` directory? No / Yes
-Would you like to use App Router? (recommended) No / Yes
-Would you like to use Turbopack for `next dev`?  No / Yes
-Would you like to customize the import alias (`@/*` by default)? No / Yes
-What import alias would you like configured? @/*
+```javascript
+// vue
+const state = reactive({
+  count: 0,
+});
+
+const count = ref(0);
 ```
 
-결과적으로 main에 있는 프로젝트가 만들어집니다.
-
-# 참고사항
-
-[yarn](https://yarnpkg.com/)을 설치하시면 좀 더 편하게 node의 패키지들을 사용할 수 있습니다.
-yarn은 병렬설치, 캐싱 등등 npm을 대안해서 만들었습니다.
-
-```
-npm install yarn --global
-
-yarn --version
-1.22.22
+```javascript
+// react
+const [count, setCount] = useState(0);
+const [objectCount, setObjectCount] = useState({
+  count: 0,
+});
 ```
 
-# 기본 제공 README.md
+### vue와 차이점
+vue에서는 객체를 관리할 때 reactive를, 원시값을 관리할 때 ref를 사용합니다.
+그러나 react에서는 둘 다 useState를 사용해서 관리합니다.
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+또한 vue에서는 직접 값을 수정할 수 있지만, react에서는 불변성을 유지한채 수정해야합니다.
+이는 react의 데이터 변경 감지 방식이 vue의 반응성 시스템과 다르기 때문입니다.
 
-## Getting Started
+react는 데이터가 변경될때마다 새로 랜더링됩니다. 이때 직접적으로 값의 변화를 확인하는게 아니고 참조값이 변경됐는지 확인합니다. 이를 위해 불변성을 유지하고, 새로운 객체를 생성해서 수정합니다.
+(virtual dom에서 각 변수의 참조값이 변경되었는지 확인하고, 변경되었다면 랜더링합니다.)
 
-First, run the development server:
+```javascript
+// vue
+const state = reactive({
+  count: 0,
+});
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+state.count = 1;
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```javascript
+// react
+const [count, setCount] = useState({
+  count: 0,
+});
+// 새로운 객체를 생성해서 불변성을 유지한채로 수정해야합니다.
+setCount({
+  count: 1,
+});
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
