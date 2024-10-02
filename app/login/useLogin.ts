@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { tryLogin } from "@/api/login";
 import { useRouter } from "next/navigation";
+import { authStore } from "@/store/authStore/authStore";
 
 export const useLogin = () => {
+  const { setAuth } = authStore();
   const [uid, setUid] = useState("");
   const [password, setPassword] = useState("");
   const [isValidforUid, setIsValidforUid] = useState(false);
@@ -20,6 +22,7 @@ export const useLogin = () => {
     try {
       const response = await tryLogin({ uid, password });
       if (response) {
+        setAuth(response.data);
         router.push("/");
       } else {
         alert("로그인 실패");
