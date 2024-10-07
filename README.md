@@ -1,37 +1,91 @@
-# zustand
+# react-slick
 
-react를 사용하다보면 단방향 데이터 바인딩으로 인해 props drilling 문제가 발생할 때가 있습니다.
-![image](https://github.com/user-attachments/assets/e15b4938-68dc-4eff-8772-c4c091c03b59)
-
-이와같은 문제를 해결하기위해 global state를 관리하는 라이브러리가 필요합니다.
-
-이러한 문제를 해결하기위해 여러 라이브러리가 존재하는데 그 중 [zustand](https://zustand-demo.pmnd.rs/)를 사용해보려고 합니다.
-
-React가 학습 난이도가 높다는 평을 받았던 주요 이유 중 하나는 Redux라는 글로벌 상태 관리 라이브러리 때문입니다.
-Redux는 기본적으로 Flux 아키텍처를 사용하며, 이를 이해하고 활용하는 것이 쉽지 않았습니다.
-![image](https://github.com/user-attachments/assets/4efd0680-7b7a-4d61-8011-3b4a24288349)
-
-zustand는 redux와 달리 간단한 설정으로 글로벌 상태를 관리할 수 있습니다.
+[react-slick](https://react-slick.neostack.com/)을 사용하여 슬라이드를 구현해보려고 합니다.
 
 ```
-yarn add zustand
+yarn add react-slick
+yarn add -D @types/react-slick
 ```
+
+[multiple item](https://react-slick.neostack.com/docs/example/multiple-items) 예시를 활용해 구현합니다.
+
+# tanstack query
+
+FrontEnd에서 다루는 많은 데이터중에 큰 부분을 차지하는 부분이 서버에서 받아오는 데이터입니다.
+
+기존에는 redux를 사용해 데이터를 관리했지만, 현재는 [tanstack query](https://tanstack.com/query/v3)와 같은 서버캐시 라이브러리를 사용해 데이터를 관리하고 있습니다.
+
+```
+yarn add @tanstack/react-query
+```
+
+### query
+
+데이터를 불러올 때 (GET) 사용합니다.
 
 ```javascript
-import { create } from "zustand";
+import { getContentItems } from "@/api/cotents";
+import { useQuery } from "@tanstack/react-query";
 
-const useStore = create((set) => ({
-  count: 1,
-  inc: () => set((state) => ({ count: state.count + 1 })),
-}));
+export const GET_CONTENT_QUERY_KEY = ["get", "v1", "content"];
 
-function Counter() {
-  const { count, inc } = useStore();
-  return (
-    <div>
-      <span>{count}</span>
-      <button onClick={inc}>one up</button>
-    </div>
-  );
-}
+export const useContentQuery = () => {
+  return useQuery({
+    queryKey: GET_CONTENT_QUERY_KEY,
+    queryFn: async () => {
+      return await getContentItems();
+    },
+    // 30분동안 캐싱
+    gcTime: 1000 * 60 * 60 * 0.5,
+  });
+};
+
+// 사용방법
+const { data, isLoading, refetch, isError, error } = useContentQuery();
+
+useEffect(() => {
+  if (data) {
+    console.log(data);
+  }
+}, [data]);
+
+const refetchData = () => {
+  refetch();
+};
+
+// 캐싱 지우기
+const queryClient = useQueryClient();
+queryClient.invalidateQueries({ queryKey: GET_CONTENT_QUERY_KEY });
+```
+
+### mutation
+
+데이터를 변경할 때 (POST, PUT, DELETE) 사용합니다.
+
+```javascript
+import { tryLogin } from "@/api/login";
+import { useMutation } from "@tanstack/react-query";
+
+export const useLoginMutation = () => {
+  return useMutation({
+    mutationKey: ["post", "v1", "login"],
+    mutationFn: async (data: LoginParameter) => {
+      return await tryLogin(data);
+    },
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
+};
+
+// 사용방법
+const { mutateAsync } = useLoginMutation();
+
+const login = async () => {
+  await mutateAsync({ uid: "test", password: "test" });
+};
+
+useEffect(() => {
+  login();
+}, []);
 ```
