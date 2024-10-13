@@ -22,7 +22,7 @@ const removeTodo = () => {
   setTodos(todos.filter((t) => t !== todo));
 };
 
-<button onClick={handleClick}>X</button>;
+<button onClick={removeTodo}>X</button>;
 ```
 
 # change event
