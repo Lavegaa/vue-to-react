@@ -4,7 +4,7 @@ nextjs를 사용해서 vue로 만든 프로젝트를 react로 만들어보는 �
 [react에서 recommend하는 setup방법](https://react.dev/learn/start-a-new-react-project#production-grade-react-frameworks)이 nextjs입니다.
 기본적으로 SSR을 지원하는 프레임워크이나, SSR의 기능 이외에도 폴더를 기반으로 하는 라우팅을 지원해줘서 react에서 주로 사용하는 [router라이브러리](https://reactrouter.com/en/main)를 사용하지 않는다는 장점도 있습니다.
 
-setup을 위해 [nextjs에서 지원하는 cli명령어](https://reactrouter.com/en/main)를 사용합니다.
+setup을 위해 [nextjs에서 지원하는 cli명령어](https://nextjs.org/docs/getting-started/installation#automatic-installation)를 사용합니다.
 
 ```bash
 npx create-next-app@latest
@@ -20,7 +20,7 @@ Would you like to customize the import alias (`@/*` by default)? No / Yes
 What import alias would you like configured? @/*
 ```
 
-결과적으로 main에 있는 프로젝트가 만들어집니다.
+결과적으로 main branch에 있는 프로젝트가 만들어집니다.
 
 # 참고사항
 
