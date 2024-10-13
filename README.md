@@ -71,6 +71,25 @@ export default function TodoList() {
       {todos.map((todo) => (
         <TodoItem key={todo.id} todo={todo.title} />
       ))}
+      {/* 위 결과는 아래와 같이 나옵니다.
+        {[
+          <TodoItem
+            key={todos[0].id}
+            todo={todos[0]}
+            handleClick={handleClick}
+          />,
+          <TodoItem
+            key={todos[1].id}
+            todo={todos[1]}
+            handleClick={handleClick}
+          />,
+          <TodoItem
+            key={todos[2].id}
+            todo={todos[2]}
+            handleClick={handleClick}
+          />,
+        ]}
+      */}
     </div>
   );
 }
