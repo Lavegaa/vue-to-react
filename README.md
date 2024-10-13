@@ -17,7 +17,10 @@ const props = defineProps({
 })
 </script>
 <template>
+  // logical or (https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Logical_OR)
+  // nullish coalescaing operator (https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing)
   <h2>{{ todo || 'No props passed yet' }}</h2>
+  <h2>{{ todo ?? 'No props passed yet' }}</h2>
 </template>
 ```
 
