@@ -9,6 +9,8 @@ const TodoItem = () => {
     done: false,
   });
 
+  // js spread 문법
+  // https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Operators/Spread_syntax
   const handleClick = () => {
     setTodo({ ...todo, done: !todo.done });
   };
